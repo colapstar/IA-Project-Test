@@ -31,6 +31,10 @@ class Utilisateur(UserMixin, db.Model):
 def load_user(user_id):
     return Utilisateur.query.get(int(user_id))
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -54,6 +58,24 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        existing_user = Utilisateur.query.filter_by(username=username).first()
+        if existing_user:
+            return "Nom d'utilisateur déjà pris. Veuillez choisir un autre nom."
+
+        new_user = Utilisateur(username=username)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
 
 # Vos autres routes...
 

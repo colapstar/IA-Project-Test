@@ -3,11 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>CineMatch</title>
 </head>
 <body>
     <h1>Bienvenue sur CineMatch!</h1>
     <p>Le système de recommandation personnalisé de films.</p>
-    <!-- Vous pouvez ajouter plus de contenu ici selon vos besoins -->
+
+    <form action="/submit_preferences" method="post">
+        <label for="genre">Genre préféré:</label>
+        <select name="genre" id="genre">
+            <option value="action">Action</option>
+            <option value="comédie">Comédie</option>
+            <!-- Ajoutez d'autres genres ici -->
+        </select>
+        <input type="submit" value="Soumettre">
+    </form>
+
+    {% if recommandations %}
+        <h2>Recommandations de films :</h2>
+        <ul>
+        {% for film in recommandations %}
+            <li>{{ film['titre'] }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ url_for('register') }}">S'inscrire</a>
 </body>
 </html>
